@@ -1,0 +1,629 @@
+@import "tailwindcss";
+@custom-variant dark (&:where(.dark, .dark *));
+
+@layer base {
+  :root {
+    --font-display: 'Bricolage Grotesque', 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+    --font-sans: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+    --font-mono: 'Plus Jakarta Sans', 'JetBrains Mono', monospace;
+    color-scheme: light;
+  }
+
+  html.dark {
+    color-scheme: dark;
+  }
+
+  body {
+    font-family: var(--font-sans);
+    background-color: #eef2f9;
+    background-image:
+      radial-gradient(circle at 10% 8%, rgba(251, 191, 36, 0.24), transparent 38%),
+      radial-gradient(circle at 88% 12%, rgba(16, 185, 129, 0.20), transparent 36%),
+      radial-gradient(circle at 78% 78%, rgba(56, 189, 248, 0.18), transparent 42%),
+      radial-gradient(circle at 18% 82%, rgba(249, 115, 22, 0.15), transparent 40%),
+      linear-gradient(160deg, #f8fafc 0%, #eef2f9 50%, #e8eff8 100%);
+    background-attachment: fixed;
+    color: #0f172a;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  h1, h2, h3, .font-display {
+    font-family: var(--font-display);
+    text-wrap: balance;
+  }
+
+  .font-mono, .tabular-nums {
+    font-family: var(--font-mono);
+    font-variant-numeric: tabular-nums;
+  }
+}
+
+/* iOS 18 / VisionOS Translucent Ambient Canvas & Dark Mode Adaptation */
+html.dark body {
+  background-color: #060a14 !important;
+  background-image:
+    radial-gradient(circle at 12% 10%, rgba(245, 158, 11, 0.22), transparent 38%),
+    radial-gradient(circle at 86% 14%, rgba(16, 185, 129, 0.18), transparent 36%),
+    radial-gradient(circle at 82% 82%, rgba(59, 130, 246, 0.18), transparent 42%),
+    radial-gradient(circle at 16% 78%, rgba(217, 119, 6, 0.14), transparent 38%),
+    linear-gradient(165deg, #060a14 0%, #0b1222 52%, #070d19 100%) !important;
+  background-attachment: fixed !important;
+  color: #f8fafc !important;
+}
+
+.ios-ambient-canvas {
+  background: transparent !important;
+}
+
+html.dark .bg-slate-50 {
+  background-color: rgba(15, 23, 42, 0.45) !important;
+  color: #f8fafc !important;
+}
+
+html.dark .bg-white {
+  background-color: rgba(19, 28, 49, 0.62) !important;
+  backdrop-filter: blur(24px) saturate(190%);
+  -webkit-backdrop-filter: blur(24px) saturate(190%);
+}
+
+html.dark .bg-white\/95,
+html.dark .bg-white\/90 {
+  background-color: rgba(15, 23, 42, 0.72) !important;
+  backdrop-filter: blur(28px) saturate(200%);
+  -webkit-backdrop-filter: blur(28px) saturate(200%);
+}
+
+html.dark .bg-slate-50\/80,
+html.dark .bg-slate-50\/60,
+html.dark .bg-slate-100 {
+  background-color: rgba(15, 23, 42, 0.55) !important;
+}
+
+html.dark .text-slate-900 {
+  color: #f8fafc !important;
+}
+
+html.dark .text-slate-800,
+html.dark .text-slate-700 {
+  color: #e2e8f0 !important;
+}
+
+html.dark .text-slate-600,
+html.dark .text-slate-500 {
+  color: #94a3b8 !important;
+}
+
+html.dark .border-slate-200,
+html.dark .border-slate-200\/80,
+html.dark .border-slate-300,
+html.dark .border-slate-100 {
+  border-color: rgba(255, 255, 255, 0.14) !important;
+}
+
+html.dark .divide-slate-100 > :not([hidden]) ~ :not([hidden]),
+html.dark .divide-slate-200 > :not([hidden]) ~ :not([hidden]) {
+  border-color: rgba(255, 255, 255, 0.12) !important;
+}
+
+input:not([type="checkbox"]),
+select,
+textarea {
+  background-color: rgba(255, 255, 255, 0.68);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border-color: rgba(255, 255, 255, 0.85);
+  box-shadow:
+    0 4px 16px -4px rgba(15, 23, 42, 0.05),
+    inset 0 1px 0 rgba(255, 255, 255, 0.9);
+}
+
+html.dark input:not([type="checkbox"]),
+html.dark select,
+html.dark textarea {
+  background-color: rgba(15, 23, 42, 0.58) !important;
+  backdrop-filter: blur(22px) saturate(190%) !important;
+  -webkit-backdrop-filter: blur(22px) saturate(190%) !important;
+  color: #f8fafc !important;
+  border-color: rgba(255, 255, 255, 0.16) !important;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1) !important;
+}
+
+html.dark input:not([type="checkbox"]):focus,
+html.dark select:focus,
+html.dark textarea:focus {
+  border-color: #fbbf24 !important;
+  box-shadow: 0 0 0 2px rgba(251, 191, 36, 0.25) !important;
+}
+
+html.dark .bg-amber-50,
+html.dark .bg-amber-50\/60 {
+  background-color: rgba(180, 83, 9, 0.24) !important;
+  color: #fde68a !important;
+}
+
+html.dark .text-amber-950,
+html.dark .text-amber-900,
+html.dark .text-amber-800,
+html.dark .text-amber-700 {
+  color: #fcd34d !important;
+}
+
+html.dark .bg-emerald-100,
+html.dark .bg-emerald-50,
+html.dark .bg-emerald-50\/50,
+html.dark .bg-emerald-50\/30 {
+  background-color: rgba(6, 95, 70, 0.38) !important;
+}
+
+html.dark .text-emerald-950,
+html.dark .text-emerald-900,
+html.dark .text-emerald-800,
+html.dark .text-emerald-700 {
+  color: #6ee7b7 !important;
+}
+
+html.dark .bg-red-100,
+html.dark .bg-red-50,
+html.dark .bg-red-50\/70,
+html.dark .bg-red-50\/60 {
+  background-color: rgba(153, 27, 27, 0.36) !important;
+}
+
+html.dark .text-red-950,
+html.dark .text-red-900,
+html.dark .text-red-800,
+html.dark .text-red-700 {
+  color: #fca5a5 !important;
+}
+
+/* Subtle Dietary Choice Badges ('Vegan', 'High Protein', 'Spicy') */
+.dietary-badge-vegan {
+  background-color: rgba(13, 148, 136, 0.11);
+  color: #0f766e;
+  border: 1px solid rgba(13, 148, 136, 0.24);
+}
+
+html.dark .dietary-badge-vegan {
+  background-color: rgba(20, 184, 166, 0.16) !important;
+  color: #5eead4 !important;
+  border-color: rgba(45, 212, 191, 0.3) !important;
+}
+
+.dietary-badge-protein {
+  background-color: rgba(2, 132, 199, 0.10);
+  color: #0369a1;
+  border: 1px solid rgba(2, 132, 199, 0.22);
+}
+
+html.dark .dietary-badge-protein {
+  background-color: rgba(56, 189, 248, 0.16) !important;
+  color: #7dd3fc !important;
+  border-color: rgba(56, 189, 248, 0.3) !important;
+}
+
+.dietary-badge-spicy {
+  background-color: rgba(234, 88, 12, 0.11);
+  color: #c2410c;
+  border: 1px solid rgba(234, 88, 12, 0.24);
+}
+
+html.dark .dietary-badge-spicy {
+  background-color: rgba(249, 115, 22, 0.16) !important;
+  color: #fdba74 !important;
+  border-color: rgba(251, 146, 60, 0.3) !important;
+}
+
+/* High-Contrast iOS Liquid Glass Selected Pills, Segmented Controls & Slot Cards */
+.mac-pill-active {
+  background: linear-gradient(180deg, #fbbf24 0%, #f59e0b 100%) !important;
+  color: #090d16 !important;
+  border-color: rgba(254, 243, 199, 0.85) !important;
+  font-weight: 700 !important;
+  box-shadow:
+    0 4px 14px -2px rgba(245, 158, 11, 0.45),
+    inset 0 1px 0.5px rgba(255, 255, 255, 0.65) !important;
+}
+
+.mac-pill-active * {
+  color: #090d16 !important;
+}
+
+.mac-pill-inactive {
+  background: rgba(255, 255, 255, 0.58);
+  backdrop-filter: blur(20px) saturate(185%);
+  -webkit-backdrop-filter: blur(20px) saturate(185%);
+  color: #1e293b;
+  border: 1px solid rgba(255, 255, 255, 0.82);
+  box-shadow:
+    0 2px 8px -2px rgba(15, 23, 42, 0.05),
+    inset 0 1px 0 rgba(255, 255, 255, 0.85);
+}
+
+.mac-pill-inactive:hover {
+  background: rgba(255, 255, 255, 0.82);
+  border-color: #ffffff;
+  color: #0f172a;
+}
+
+html.dark .mac-pill-inactive {
+  background: rgba(22, 32, 56, 0.55) !important;
+  backdrop-filter: blur(20px) saturate(190%) !important;
+  -webkit-backdrop-filter: blur(20px) saturate(190%) !important;
+  color: #e2e8f0 !important;
+  border: 1px solid rgba(255, 255, 255, 0.15) !important;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.12) !important;
+}
+
+html.dark .mac-pill-inactive:hover {
+  background: rgba(30, 43, 74, 0.72) !important;
+  border-color: rgba(255, 255, 255, 0.26) !important;
+  color: #f8fafc !important;
+}
+
+.swiggy-add-btn {
+  background: rgba(255, 255, 255, 0.92) !important;
+  backdrop-filter: blur(14px) saturate(180%) !important;
+  -webkit-backdrop-filter: blur(14px) saturate(180%) !important;
+  color: #047857 !important;
+  border: 1.5px solid #059669 !important;
+  box-shadow:
+    0 6px 16px -3px rgba(15, 23, 42, 0.18),
+    inset 0 1px 0 rgba(255, 255, 255, 0.95) !important;
+}
+
+.swiggy-add-btn:hover {
+  background: #ecfdf5 !important;
+}
+
+html.dark .swiggy-add-btn {
+  background: rgba(13, 22, 38, 0.86) !important;
+  backdrop-filter: blur(16px) saturate(190%) !important;
+  -webkit-backdrop-filter: blur(16px) saturate(190%) !important;
+  color: #34d399 !important;
+  border: 1.5px solid #10b981 !important;
+  box-shadow:
+    0 8px 20px -3px rgba(0, 0, 0, 0.7),
+    inset 0 1px 0 rgba(255, 255, 255, 0.18) !important;
+}
+
+html.dark .swiggy-add-btn:hover {
+  background: rgba(19, 35, 56, 0.95) !important;
+}
+
+.mac-slot-active {
+  background: linear-gradient(180deg, #fef3c7 0%, #fde68a 100%) !important;
+  color: #090d16 !important;
+  border: 2px solid #d97706 !important;
+  box-shadow:
+    0 4px 12px -2px rgba(245, 158, 11, 0.28),
+    inset 0 1px 0 rgba(255, 255, 255, 0.6) !important;
+}
+
+html.dark .mac-slot-active {
+  background: linear-gradient(180deg, #fbbf24 0%, #f59e0b 100%) !important;
+  color: #090d16 !important;
+  border: 2px solid #fde68a !important;
+  box-shadow:
+    0 4px 14px -2px rgba(251, 191, 36, 0.42),
+    inset 0 1px 0 rgba(255, 255, 255, 0.45) !important;
+}
+
+/* Fast, Zero-Lag iOS / macOS Spring Micro-Interactions & View Transitions */
+@keyframes macViewEnter {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes macSheetSpring {
+  0% {
+    opacity: 0;
+    transform: translateY(10px) scale(0.99);
+  }
+  100% {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes macNotificationSpring {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes canteenProgressShimmer {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+.animate-view-enter {
+  animation: macViewEnter 120ms ease-out;
+}
+
+.animate-drawer-up {
+  animation: macSheetSpring 150ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.animate-macos-notification {
+  animation: macNotificationSpring 200ms ease-out;
+}
+
+.macos-notification-glass {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.72) 0%, rgba(255, 255, 255, 0.52) 100%);
+  backdrop-filter: blur(28px) saturate(200%);
+  -webkit-backdrop-filter: blur(28px) saturate(200%);
+  border: 1px solid rgba(255, 255, 255, 0.88);
+  box-shadow:
+    0 18px 40px -12px rgba(15, 23, 42, 0.12),
+    0 4px 12px -2px rgba(15, 23, 42, 0.05),
+    inset 0 1px 0.5px rgba(255, 255, 255, 0.95);
+}
+
+html.dark .macos-notification-glass {
+  background: linear-gradient(135deg, rgba(24, 35, 58, 0.70) 0%, rgba(15, 23, 42, 0.54) 100%) !important;
+  backdrop-filter: blur(28px) saturate(200%) !important;
+  -webkit-backdrop-filter: blur(28px) saturate(200%) !important;
+  border: 1px solid rgba(251, 191, 36, 0.34) !important;
+  box-shadow:
+    0 20px 44px -12px rgba(0, 0, 0, 0.65),
+    0 0 24px -6px rgba(251, 191, 36, 0.18),
+    inset 0 1px 0.5px rgba(255, 255, 255, 0.18) !important;
+}
+
+/* iOS 18 / VisionOS Liquid Glass Navigation Bar & Frosted Translucent Cards */
+.mac-glass-bar {
+  background: rgba(255, 255, 255, 0.58);
+  backdrop-filter: blur(28px) saturate(200%);
+  -webkit-backdrop-filter: blur(28px) saturate(200%);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.82);
+  box-shadow:
+    0 8px 28px -8px rgba(15, 23, 42, 0.07),
+    inset 0 1px 0 rgba(255, 255, 255, 0.9);
+}
+
+html.dark .mac-glass-bar {
+  background: rgba(11, 18, 34, 0.58) !important;
+  backdrop-filter: blur(28px) saturate(200%) !important;
+  -webkit-backdrop-filter: blur(28px) saturate(200%) !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.14) !important;
+  box-shadow:
+    0 10px 30px -8px rgba(0, 0, 0, 0.6),
+    inset 0 1px 0 rgba(255, 255, 255, 0.12) !important;
+}
+
+.mac-glass-card {
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.68) 0%,
+    rgba(255, 255, 255, 0.48) 100%
+  );
+  backdrop-filter: blur(28px) saturate(200%);
+  -webkit-backdrop-filter: blur(28px) saturate(200%);
+  border: 1px solid rgba(255, 255, 255, 0.86);
+  box-shadow:
+    0 12px 32px -8px rgba(15, 23, 42, 0.08),
+    0 2px 6px -1px rgba(15, 23, 42, 0.04),
+    inset 0 1px 0.5px rgba(255, 255, 255, 0.95);
+}
+
+html.dark .mac-glass-card {
+  background: linear-gradient(
+    135deg,
+    rgba(24, 35, 60, 0.62) 0%,
+    rgba(13, 20, 36, 0.46) 100%
+  ) !important;
+  backdrop-filter: blur(28px) saturate(200%) !important;
+  -webkit-backdrop-filter: blur(28px) saturate(200%) !important;
+  border: 1px solid rgba(255, 255, 255, 0.16) !important;
+  box-shadow:
+    0 16px 38px -10px rgba(0, 0, 0, 0.62),
+    inset 0 1px 0.5px rgba(255, 255, 255, 0.18) !important;
+}
+
+.ios-glass-drawer {
+  background: linear-gradient(
+    160deg,
+    rgba(255, 255, 255, 0.84) 0%,
+    rgba(248, 250, 252, 0.74) 100%
+  );
+  backdrop-filter: blur(34px) saturate(210%);
+  -webkit-backdrop-filter: blur(34px) saturate(210%);
+  border: 1px solid rgba(255, 255, 255, 0.9);
+  box-shadow:
+    0 24px 60px -12px rgba(15, 23, 42, 0.25),
+    inset 0 1px 0.5px rgba(255, 255, 255, 0.95);
+}
+
+html.dark .ios-glass-drawer {
+  background: linear-gradient(
+    160deg,
+    rgba(19, 28, 49, 0.84) 0%,
+    rgba(10, 15, 29, 0.76) 100%
+  ) !important;
+  backdrop-filter: blur(34px) saturate(210%) !important;
+  -webkit-backdrop-filter: blur(34px) saturate(210%) !important;
+  border: 1px solid rgba(255, 255, 255, 0.18) !important;
+  box-shadow:
+    0 28px 64px -12px rgba(0, 0, 0, 0.8),
+    inset 0 1px 0.5px rgba(255, 255, 255, 0.18) !important;
+}
+
+.ios-bottom-tabbar {
+  background: rgba(255, 255, 255, 0.68);
+  backdrop-filter: blur(28px) saturate(200%);
+  -webkit-backdrop-filter: blur(28px) saturate(200%);
+  border-top: 1px solid rgba(255, 255, 255, 0.85);
+  box-shadow:
+    0 -8px 28px -8px rgba(15, 23, 42, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.92);
+}
+
+html.dark .ios-bottom-tabbar {
+  background: rgba(11, 18, 34, 0.68) !important;
+  backdrop-filter: blur(28px) saturate(200%) !important;
+  -webkit-backdrop-filter: blur(28px) saturate(200%) !important;
+  border-top: 1px solid rgba(255, 255, 255, 0.15) !important;
+  box-shadow:
+    0 -10px 30px -8px rgba(0, 0, 0, 0.65),
+    inset 0 1px 0 rgba(255, 255, 255, 0.14) !important;
+}
+
+.side-cart-bubble {
+  background: linear-gradient(145deg, rgba(16, 185, 129, 0.9) 0%, rgba(4, 120, 87, 0.88) 100%) !important;
+  backdrop-filter: blur(22px) saturate(200%) !important;
+  -webkit-backdrop-filter: blur(22px) saturate(200%) !important;
+  color: #ffffff !important;
+  border: 1.5px solid rgba(167, 243, 208, 0.85) !important;
+  box-shadow:
+    0 16px 34px -6px rgba(5, 150, 105, 0.5),
+    0 4px 12px -2px rgba(15, 23, 42, 0.22),
+    inset 0 1px 0.5px rgba(255, 255, 255, 0.55) !important;
+}
+
+.side-cart-bubble:hover {
+  background: linear-gradient(145deg, rgba(16, 185, 129, 0.96) 0%, rgba(5, 150, 105, 0.94) 100%) !important;
+}
+
+.side-cart-bubble-empty {
+  background: rgba(15, 23, 42, 0.78) !important;
+  backdrop-filter: blur(24px) saturate(200%) !important;
+  -webkit-backdrop-filter: blur(24px) saturate(200%) !important;
+  color: #f8fafc !important;
+  border: 1.5px solid rgba(255, 255, 255, 0.24) !important;
+  box-shadow:
+    0 12px 28px -6px rgba(15, 23, 42, 0.35),
+    inset 0 1px 0.5px rgba(255, 255, 255, 0.25) !important;
+}
+
+html.dark .side-cart-bubble-empty {
+  background: rgba(30, 41, 59, 0.72) !important;
+  color: #f8fafc !important;
+  border: 1.5px solid rgba(255, 255, 255, 0.22) !important;
+}
+
+.mac-dock-bar {
+  background: rgba(11, 17, 32, 0.76);
+  backdrop-filter: blur(24px) saturate(190%);
+  -webkit-backdrop-filter: blur(24px) saturate(190%);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.14);
+}
+
+.progress-bar-shimmer {
+  background-image: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(255, 255, 255, 0.32) 50%,
+    rgba(255, 255, 255, 0) 100%
+  );
+  background-size: 200% 100%;
+  animation: canteenProgressShimmer 2s linear infinite;
+}
+
+/* Snappy iOS-style tactile button physics (strictly on interactive buttons, no DOM-wide div lag) */
+button:not(:disabled) {
+  transition:
+    transform 120ms cubic-bezier(0.2, 0.8, 0.2, 1),
+    background-color 130ms cubic-bezier(0.2, 0.8, 0.2, 1),
+    border-color 130ms cubic-bezier(0.2, 0.8, 0.2, 1),
+    box-shadow 130ms cubic-bezier(0.2, 0.8, 0.2, 1),
+    color 110ms ease;
+}
+
+button:not(:disabled):active {
+  transform: scale(0.965);
+}
+
+article,
+.card-interactive {
+  transition:
+    transform 160ms cubic-bezier(0.16, 1, 0.3, 1),
+    border-color 140ms cubic-bezier(0.2, 0.8, 0.2, 1),
+    box-shadow 160ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.card-interactive:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 14px 32px -8px rgba(15, 23, 42, 0.1);
+}
+
+html.dark .card-interactive:hover {
+  box-shadow: 0 16px 36px -8px rgba(0, 0, 0, 0.58);
+}
+
+input[type="range"] {
+  accent-color: #f59e0b;
+  cursor: pointer;
+}
+
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+  outline: 2px solid #f59e0b;
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  ::before,
+  ::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Preserve physical 80mm thermal receipt paper appearance in both Light and Dark themes */
+html.dark .thermal-paper-bill {
+  background-color: #fffdf7 !important;
+  color: #0c0a09 !important;
+  border-color: #d6d3d1 !important;
+}
+
+html.dark .thermal-paper-bill .bg-white {
+  background-color: #ffffff !important;
+  color: #0c0a09 !important;
+}
+
+html.dark .thermal-paper-bill .bg-amber-50,
+html.dark .thermal-paper-bill .bg-amber-50\/70 {
+  background-color: #fffbeb !important;
+  color: #451a03 !important;
+}
+
+html.dark .thermal-paper-bill .bg-emerald-50 {
+  background-color: #ecfdf5 !important;
+  color: #022c22 !important;
+}
+
+@media print {
+  body * {
+    visibility: hidden;
+  }
+  #printable-gst-thermal-bill,
+  #printable-gst-thermal-bill * {
+    visibility: visible;
+  }
+  #printable-gst-thermal-bill {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 80mm;
+    max-width: 100%;
+    box-shadow: none !important;
+    border: 1px solid #000 !important;
+  }
+}

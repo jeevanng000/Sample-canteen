@@ -1,0 +1,288 @@
+{
+  "entities": {
+    "UserProfile": {
+      "title": "UserProfile",
+      "description": "Campus user profile storing full name, student/staff ID, email, and role.",
+      "type": "object",
+      "properties": {
+        "uid": {
+          "type": "string",
+          "description": "Firebase Auth UID",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "email": {
+          "type": "string",
+          "description": "College email address",
+          "minLength": 3,
+          "maxLength": 160
+        },
+        "fullName": {
+          "type": "string",
+          "description": "Student or staff full name",
+          "minLength": 1,
+          "maxLength": 120
+        },
+        "studentStaffId": {
+          "type": "string",
+          "description": "Campus roll number or staff ID",
+          "minLength": 1,
+          "maxLength": 64
+        },
+        "role": {
+          "type": "string",
+          "description": "Access role (customer by default; only admin can modify)",
+          "enum": ["customer", "kitchen", "admin"]
+        }
+      },
+      "required": ["uid", "email", "fullName", "studentStaffId", "role"]
+    },
+    "MenuItem": {
+      "title": "MenuItem",
+      "description": "South Indian canteen menu item managed by admin.",
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 120
+        },
+        "price": {
+          "type": "number",
+          "description": "Price in INR"
+        },
+        "category": {
+          "type": "string",
+          "enum": ["Dosa & Idli", "Rice & Meals", "Snacks & Vada", "Beverages"]
+        },
+        "photo": {
+          "type": "string",
+          "maxLength": 15000
+        },
+        "isVeg": {
+          "type": "boolean"
+        },
+        "description": {
+          "type": "string",
+          "maxLength": 400
+        },
+        "prepTimeMinutes": {
+          "type": "number"
+        },
+        "available": {
+          "type": "boolean"
+        }
+      },
+      "required": ["name", "price", "category", "photo", "isVeg", "description", "prepTimeMinutes", "available"]
+    },
+    "CanteenSettings": {
+      "title": "CanteenSettings",
+      "description": "Global canteen configuration managed by admin.",
+      "type": "object",
+      "properties": {
+        "isOpen": {
+          "type": "boolean"
+        },
+        "openTime": {
+          "type": "string",
+          "minLength": 4,
+          "maxLength": 10
+        },
+        "closeTime": {
+          "type": "string",
+          "minLength": 4,
+          "maxLength": 10
+        },
+        "ordersPerSlot": {
+          "type": "number"
+        },
+        "noShowMinutes": {
+          "type": "number"
+        },
+        "quietSlotDiscount": {
+          "type": "number"
+        },
+        "testMode": {
+          "type": "boolean"
+        },
+        "rateLimitWindowMinutes": {
+          "type": "number",
+          "enum": [30, 60]
+        },
+        "maxOrdersPerWindow": {
+          "type": "number"
+        }
+      },
+      "required": ["isOpen", "openTime", "closeTime", "ordersPerSlot", "noShowMinutes", "quietSlotDiscount", "testMode"]
+    },
+    "SlotBooking": {
+      "title": "SlotBooking",
+      "description": "Tracks booked order count for a 10-minute pickup slot via transaction.",
+      "type": "object",
+      "properties": {
+        "slotId": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 64
+        },
+        "dateStr": {
+          "type": "string",
+          "minLength": 8,
+          "maxLength": 16
+        },
+        "timeStr": {
+          "type": "string",
+          "minLength": 4,
+          "maxLength": 10
+        },
+        "bookedCount": {
+          "type": "number"
+        },
+        "capacity": {
+          "type": "number"
+        }
+      },
+      "required": ["slotId", "dateStr", "timeStr", "bookedCount", "capacity"]
+    },
+    "DailyCounter": {
+      "title": "DailyCounter",
+      "description": "Tracks daily token number (#101, #102...) reset each day.",
+      "type": "object",
+      "properties": {
+        "dateStr": {
+          "type": "string",
+          "minLength": 8,
+          "maxLength": 16
+        },
+        "lastToken": {
+          "type": "number"
+        }
+      },
+      "required": ["dateStr", "lastToken"]
+    },
+    "CanteenOrder": {
+      "title": "CanteenOrder",
+      "description": "Pre-order record containing authoritative menu snapshot, slot info, token number, and status.",
+      "type": "object",
+      "properties": {
+        "userId": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128
+        },
+        "userEmail": {
+          "type": "string",
+          "minLength": 3,
+          "maxLength": 160
+        },
+        "userName": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 120
+        },
+        "studentStaffId": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 64
+        },
+        "tokenNumber": {
+          "type": "number"
+        },
+        "dateStr": {
+          "type": "string",
+          "minLength": 8,
+          "maxLength": 16
+        },
+        "orderType": {
+          "type": "string",
+          "enum": ["takeaway", "dine_in"]
+        },
+        "tableNumber": {
+          "type": "string",
+          "maxLength": 32
+        },
+        "slotTime": {
+          "type": "string",
+          "minLength": 4,
+          "maxLength": 10
+        },
+        "slotId": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 64
+        },
+        "subtotal": {
+          "type": "number"
+        },
+        "discount": {
+          "type": "number"
+        },
+        "totalAmount": {
+          "type": "number"
+        },
+        "status": {
+          "type": "string",
+          "enum": ["placed", "preparing", "ready", "collected", "cancelled", "rejected", "no_show"]
+        },
+        "paymentMode": {
+          "type": "string",
+          "enum": ["test", "cashfree"]
+        },
+        "paymentId": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128
+        },
+        "refundStatus": {
+          "type": "string",
+          "enum": ["none", "processing", "processed", "failed"]
+        }
+      },
+      "required": [
+        "userId",
+        "userEmail",
+        "userName",
+        "studentStaffId",
+        "tokenNumber",
+        "dateStr",
+        "orderType",
+        "slotTime",
+        "slotId",
+        "subtotal",
+        "discount",
+        "totalAmount",
+        "status",
+        "paymentMode",
+        "paymentId",
+        "refundStatus"
+      ]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": "UserProfile",
+      "description": "User profiles keyed by Firebase Auth UID"
+    },
+    "/menu/{itemId}": {
+      "schema": "MenuItem",
+      "description": "South Indian canteen menu items"
+    },
+    "/settings/{settingId}": {
+      "schema": "CanteenSettings",
+      "description": "Global canteen configuration document (settings/global)"
+    },
+    "/slots/{slotId}": {
+      "schema": "SlotBooking",
+      "description": "10-minute pickup slot booking counters"
+    },
+    "/counters/{dateStr}": {
+      "schema": "DailyCounter",
+      "description": "Daily token number counter"
+    },
+    "/orders/{orderId}": {
+      "schema": "CanteenOrder",
+      "description": "Campus canteen orders"
+    }
+  }
+}

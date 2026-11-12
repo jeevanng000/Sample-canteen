@@ -1,0 +1,6 @@
+{
+  "name": "Annapoorna Campus Canteen",
+  "description": "Mobile-first college campus canteen pre-ordering PWA with live slot capacity, rush meter, quiet-slot discounts, kitchen queue, and Cashfree reconciliation.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

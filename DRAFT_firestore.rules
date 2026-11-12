@@ -1,0 +1,241 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Global Safety Net: Default-deny catch-all
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    function isValidId(id) {
+      return id is string && id.size() >= 1 && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-:]+$');
+    }
+
+    function incoming() {
+      return request.resource.data;
+    }
+
+    function existing() {
+      return resource.data;
+    }
+
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isBootstrappedAdmin() {
+      return isSignedIn() &&
+        request.auth.token.email == 'jeevankingdimpu@gmail.com' &&
+        request.auth.token.email_verified == true;
+    }
+
+    function userRole() {
+      return get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role;
+    }
+
+    function isAdmin() {
+      return isBootstrappedAdmin() || (
+        isSignedIn() &&
+        exists(/databases/$(database)/documents/users/$(request.auth.uid)) &&
+        userRole() == 'admin'
+      );
+    }
+
+    function isKitchenOrAdmin() {
+      return isAdmin() || (
+        isSignedIn() &&
+        exists(/databases/$(database)/documents/users/$(request.auth.uid)) &&
+        userRole() == 'kitchen'
+      );
+    }
+
+    function isValidUserProfile(data) {
+      return data.keys().hasAll(['uid', 'email', 'fullName', 'studentStaffId', 'role']) &&
+        data.keys().hasOnly(['uid', 'email', 'fullName', 'studentStaffId', 'role', 'createdAt', 'updatedAt']) &&
+        data.uid is string && data.uid.size() >= 1 && data.uid.size() <= 128 &&
+        data.email is string && data.email.size() >= 3 && data.email.size() <= 160 &&
+        data.fullName is string && data.fullName.size() >= 1 && data.fullName.size() <= 120 &&
+        data.studentStaffId is string && data.studentStaffId.size() >= 1 && data.studentStaffId.size() <= 64 &&
+        data.role in ['customer', 'kitchen', 'admin'];
+    }
+
+    function isValidMenuItem(data) {
+      return data.keys().hasAll(['name', 'price', 'category', 'photo', 'isVeg', 'description', 'prepTimeMinutes', 'available']) &&
+        data.keys().hasOnly(['name', 'price', 'category', 'photo', 'isVeg', 'description', 'prepTimeMinutes', 'available', 'createdAt', 'updatedAt']) &&
+        data.name is string && data.name.size() >= 1 && data.name.size() <= 120 &&
+        data.price is number && data.price >= 1 && data.price <= 5000 &&
+        data.category in ['Dosa & Idli', 'Rice & Meals', 'Snacks & Vada', 'Beverages'] &&
+        data.photo is string && data.photo.size() <= 15000 &&
+        data.isVeg is bool &&
+        data.description is string && data.description.size() <= 400 &&
+        data.prepTimeMinutes is number && data.prepTimeMinutes >= 1 && data.prepTimeMinutes <= 120 &&
+        data.available is bool;
+    }
+
+    function isValidSettings(data) {
+      return data.keys().hasAll(['isOpen', 'openTime', 'closeTime', 'ordersPerSlot', 'noShowMinutes', 'quietSlotDiscount', 'testMode']) &&
+        data.keys().hasOnly(['isOpen', 'openTime', 'closeTime', 'ordersPerSlot', 'noShowMinutes', 'quietSlotDiscount', 'testMode', 'updatedAt']) &&
+        data.isOpen is bool &&
+        data.openTime is string && data.openTime.size() >= 4 && data.openTime.size() <= 10 &&
+        data.closeTime is string && data.closeTime.size() >= 4 && data.closeTime.size() <= 10 &&
+        data.ordersPerSlot is number && data.ordersPerSlot >= 1 && data.ordersPerSlot <= 100 &&
+        data.noShowMinutes is number && data.noShowMinutes >= 1 && data.noShowMinutes <= 240 &&
+        data.quietSlotDiscount is number && data.quietSlotDiscount >= 0 && data.quietSlotDiscount <= 500 &&
+        data.testMode is bool;
+    }
+
+    function isValidSlotBooking(data) {
+      return data.keys().hasAll(['slotId', 'dateStr', 'timeStr', 'bookedCount', 'capacity']) &&
+        data.keys().hasOnly(['slotId', 'dateStr', 'timeStr', 'bookedCount', 'capacity', 'updatedAt']) &&
+        data.slotId is string && data.slotId.size() >= 1 && data.slotId.size() <= 64 &&
+        data.dateStr is string && data.dateStr.size() >= 8 && data.dateStr.size() <= 16 &&
+        data.timeStr is string && data.timeStr.size() >= 4 && data.timeStr.size() <= 10 &&
+        data.bookedCount is number && data.bookedCount >= 0 &&
+        data.capacity is number && data.capacity >= 1 &&
+        data.bookedCount <= data.capacity;
+    }
+
+    function isValidDailyCounter(data) {
+      return data.keys().hasAll(['dateStr', 'lastToken']) &&
+        data.keys().hasOnly(['dateStr', 'lastToken', 'updatedAt']) &&
+        data.dateStr is string && data.dateStr.size() >= 8 && data.dateStr.size() <= 16 &&
+        data.lastToken is number && data.lastToken >= 100 && data.lastToken <= 99999;
+    }
+
+    function isValidOrder(data) {
+      return data.keys().hasAll([
+          'userId', 'userEmail', 'userName', 'studentStaffId', 'tokenNumber',
+          'dateStr', 'orderType', 'tableNumber', 'slotTime', 'slotId',
+          'items', 'subtotal', 'discount', 'totalAmount', 'status',
+          'paymentMode', 'paymentId', 'refundStatus', 'maxPrepTimeMinutes',
+          'createdAtMs', 'updatedAtMs'
+        ]) &&
+        data.keys().hasOnly([
+          'userId', 'userEmail', 'userName', 'studentStaffId', 'tokenNumber',
+          'dateStr', 'orderType', 'tableNumber', 'slotTime', 'slotId',
+          'items', 'subtotal', 'discount', 'totalAmount', 'status',
+          'paymentMode', 'paymentId', 'refundStatus', 'refundId', 'refundReason',
+          'maxPrepTimeMinutes', 'readyAtMs', 'createdAtMs', 'updatedAtMs'
+        ]) &&
+        data.userId is string && data.userId.size() >= 1 && data.userId.size() <= 128 &&
+        data.userEmail is string && data.userEmail.size() >= 3 && data.userEmail.size() <= 160 &&
+        data.userName is string && data.userName.size() >= 1 && data.userName.size() <= 120 &&
+        data.studentStaffId is string && data.studentStaffId.size() >= 1 && data.studentStaffId.size() <= 64 &&
+        data.tokenNumber is number && data.tokenNumber >= 100 &&
+        data.dateStr is string && data.dateStr.size() >= 8 && data.dateStr.size() <= 16 &&
+        data.orderType in ['takeaway', 'dine_in'] &&
+        data.tableNumber is string && data.tableNumber.size() <= 32 &&
+        data.slotTime is string && data.slotTime.size() >= 4 && data.slotTime.size() <= 10 &&
+        data.slotId is string && data.slotId.size() >= 1 && data.slotId.size() <= 64 &&
+        data.items is list && data.items.size() >= 1 && data.items.size() <= 25 &&
+        data.subtotal is number && data.subtotal >= 1 &&
+        data.discount is number && data.discount >= 0 &&
+        data.totalAmount is number && data.totalAmount >= 0 &&
+        data.status in ['placed', 'preparing', 'ready', 'collected', 'cancelled', 'rejected', 'no_show'] &&
+        data.paymentMode in ['test', 'cashfree'] &&
+        data.paymentId is string && data.paymentId.size() >= 1 && data.paymentId.size() <= 128 &&
+        data.refundStatus in ['none', 'processing', 'processed', 'failed'] &&
+        data.maxPrepTimeMinutes is number && data.maxPrepTimeMinutes >= 1 &&
+        data.createdAtMs is number &&
+        data.updatedAtMs is number;
+    }
+
+    // 1. User Profiles: Each user can read only their own profile and cannot edit the role field; only admin can change roles.
+    match /users/{userId} {
+      allow get: if isSignedIn() && isValidId(userId) && (request.auth.uid == userId || isAdmin());
+      allow list: if isSignedIn() && (resource.data.uid == request.auth.uid || isAdmin());
+      allow create: if isSignedIn() && isValidId(userId) && request.auth.uid == userId &&
+        isValidUserProfile(incoming()) &&
+        incoming().uid == request.auth.uid &&
+        (incoming().role == 'customer' || isBootstrappedAdmin());
+      allow update: if isSignedIn() && isValidId(userId) && isValidUserProfile(incoming()) && (
+        isAdmin() || (
+          request.auth.uid == userId &&
+          incoming().uid == existing().uid &&
+          incoming().email == existing().email &&
+          incoming().role == existing().role &&
+          incoming().diff(existing()).affectedKeys().hasOnly(['fullName', 'studentStaffId', 'updatedAt'])
+        )
+      );
+      allow delete: if isAdmin() && isValidId(userId);
+    }
+
+    // 2. Menu Items: Everyone logged in can read the menu; only admin can write (kitchen/admin can toggle availability when an item runs out).
+    match /menu/{itemId} {
+      allow get: if isSignedIn() && isValidId(itemId);
+      allow list: if isSignedIn() && resource.data.price >= 0;
+      allow create: if isSignedIn() && isValidId(itemId) && isValidMenuItem(incoming()) && isAdmin();
+      allow update: if isSignedIn() && isValidId(itemId) && isValidMenuItem(incoming()) && (
+        isAdmin() || (
+          isKitchenOrAdmin() &&
+          incoming().diff(existing()).affectedKeys().hasOnly(['available', 'updatedAt'])
+        )
+      );
+      allow delete: if isSignedIn() && isValidId(itemId) && isAdmin();
+    }
+
+    // 3. Canteen Settings: Everyone logged in can read; only admin can write.
+    match /settings/{settingId} {
+      allow get: if isSignedIn() && isValidId(settingId);
+      allow list: if isSignedIn() && resource.data.ordersPerSlot >= 1;
+      allow create, update: if isSignedIn() && isValidId(settingId) && isValidSettings(incoming()) && isAdmin();
+      allow delete: if false;
+    }
+
+    // 4. Slot Bookings: Used in transaction when booking or cancelling an order.
+    match /slots/{slotId} {
+      allow get: if isSignedIn() && isValidId(slotId);
+      allow list: if isSignedIn() && resource.data.capacity >= 1;
+      allow create: if isSignedIn() && isValidId(slotId) && isValidSlotBooking(incoming());
+      allow update: if isSignedIn() && isValidId(slotId) && isValidSlotBooking(incoming()) &&
+        incoming().slotId == existing().slotId &&
+        incoming().diff(existing()).affectedKeys().hasOnly(['bookedCount', 'capacity', 'updatedAt']);
+      allow delete: if isAdmin() && isValidId(slotId);
+    }
+
+    // 5. Daily Token Counter: Used in transaction to assign #101, #102...
+    match /counters/{dateStr} {
+      allow get: if isSignedIn() && isValidId(dateStr);
+      allow list: if isSignedIn() && resource.data.lastToken >= 100;
+      allow create: if isSignedIn() && isValidId(dateStr) && isValidDailyCounter(incoming());
+      allow update: if isSignedIn() && isValidId(dateStr) && isValidDailyCounter(incoming()) &&
+        incoming().dateStr == existing().dateStr &&
+        incoming().lastToken == existing().lastToken + 1 &&
+        incoming().diff(existing()).affectedKeys().hasOnly(['lastToken', 'updatedAt']);
+      allow delete: if false;
+    }
+
+    // 6. Orders: Customer creates and reads own orders (can cancel only while placed); Kitchen/Admin manages queue & refunds.
+    match /orders/{orderId} {
+      allow get: if isSignedIn() && isValidId(orderId) && (
+        resource.data.userId == request.auth.uid || isKitchenOrAdmin()
+      );
+      allow list: if isSignedIn() && (
+        resource.data.userId == request.auth.uid || isKitchenOrAdmin()
+      );
+      allow create: if isSignedIn() && isValidId(orderId) && isValidOrder(incoming()) &&
+        incoming().userId == request.auth.uid &&
+        incoming().status == 'placed';
+      allow update: if isSignedIn() && isValidId(orderId) && isValidOrder(incoming()) &&
+        incoming().userId == existing().userId &&
+        incoming().tokenNumber == existing().tokenNumber &&
+        incoming().totalAmount == existing().totalAmount && (
+          isAdmin() ||
+          // Customer Action: Cancel own order ONLY while status is 'placed'
+          (
+            request.auth.uid == existing().userId &&
+            existing().status == 'placed' &&
+            incoming().status == 'cancelled' &&
+            incoming().diff(existing()).affectedKeys().hasOnly(['status', 'refundStatus', 'refundId', 'refundReason', 'updatedAtMs'])
+          ) ||
+          // Kitchen Action: Advance or reject active non-terminal orders
+          (
+            isKitchenOrAdmin() &&
+            !(existing().status in ['collected', 'cancelled', 'rejected', 'no_show']) &&
+            incoming().diff(existing()).affectedKeys().hasOnly(['status', 'readyAtMs', 'refundStatus', 'refundId', 'refundReason', 'updatedAtMs'])
+          )
+        );
+      allow delete: if isAdmin() && isValidId(orderId);
+    }
+  }
+}
